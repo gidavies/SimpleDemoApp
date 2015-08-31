@@ -40,6 +40,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DAL\DAL.cs" />
+    <Compile Include="DAL\IDAL.cs" />
+    <Compile Include="Models\Contract.cs" />
+    <Compile Include="Models\Customer.cs" />
+    <Compile Include="Models\InvalidLocationException.cs" />
+    <Compile Include="Models\InvalidRentException.cs" />
+    <Compile Include="Models\Location.cs" />
+    <Compile Include="OrderCalculators\Calculators\CustomerOrderManagement.cs" />
+    <Compile Include="OrderCalculators\Calculators\IOrderManagement.cs" />
+    <Compile Include="OrderCalculators\OrderCalculator.cs" />
+    <Compile Include="OrderCalculators\OrderRecord.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
