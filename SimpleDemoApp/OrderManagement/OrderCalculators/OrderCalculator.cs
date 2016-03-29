@@ -9,6 +9,7 @@ namespace Contracts
 
         public uint CalculateOrderCosts(Customer customer, IOrderManagement contract)
         {
+
             var orderCosts = contract.ReOrder(
                 customer.Property.IsCreditChecked,
                 customer.Property.Location,
