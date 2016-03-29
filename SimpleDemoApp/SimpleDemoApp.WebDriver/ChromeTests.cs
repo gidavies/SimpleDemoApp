@@ -33,6 +33,7 @@ namespace SimpleDemoApp.WebDriver
         }
 
         [TestMethod]
+        [TestCategory("UI")]
         public void HomePageFoundChromeTest()
         {
             _webDriver.Url = _webAppBaseURL;
@@ -44,6 +45,7 @@ namespace SimpleDemoApp.WebDriver
         }
 
         [TestMethod]
+        [TestCategory("UI")]
         public void AboutPageFoundChromeTest()
         {
             _webDriver.Url = _webAppBaseURL + "/Home/About";
@@ -55,6 +57,7 @@ namespace SimpleDemoApp.WebDriver
         }
 
         [TestMethod]
+        [TestCategory("UI")]
         public void ContactPageFoundChromeTest()
         {
             _webDriver.Url = _webAppBaseURL + "/Home/Contact";
@@ -66,6 +69,7 @@ namespace SimpleDemoApp.WebDriver
         }
 
         [TestMethod]
+        [TestCategory("UI")]
         public void SupportEmailAddressChromeTest()
         {
             string supportEmailAddress = "Support@example.com";
@@ -77,6 +81,7 @@ namespace SimpleDemoApp.WebDriver
         }
 
         [TestMethod]
+        [TestCategory("UI")]
         public void MarketingEmailAddressChromeTest()
         {
             string marketingEmailAddress = "Marketing@example.com";
