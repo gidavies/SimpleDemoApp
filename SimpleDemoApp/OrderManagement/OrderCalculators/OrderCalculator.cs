@@ -10,8 +10,6 @@ namespace Contracts
         public uint CalculateOrderCosts(Customer customer, IOrderManagement contract)
         {
 
-            //if (customer == null || contract == null) return default(uint);
-
             var orderCosts = contract.ReOrder(
                 customer.Property.IsCreditChecked,
                 customer.Property.Location,
