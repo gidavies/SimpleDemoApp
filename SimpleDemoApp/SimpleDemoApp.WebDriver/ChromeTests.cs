@@ -10,7 +10,7 @@ namespace SimpleDemoApp.WebDriver
     {
 
         private static RemoteWebDriver _webDriver = null;
-        private static string _webAppBaseURL = "http://gdaviwebappdev.azurewebsites.net";
+        private static string _webAppBaseURL;
 
         [ClassInitialize()]
         // All tests in this class are going to use Chrome, therefore set the Chrome driver up once here
@@ -20,7 +20,28 @@ namespace SimpleDemoApp.WebDriver
             _webDriver = new ChromeDriver(@"C:\Tools");
 
             //Set page load timeout to 5 seconds 
-            _webDriver.Manage().Timeouts().SetPageLoadTimeout(TimeSpan.FromSeconds(5));
+            _webDriver.Manage().Timeouts().SetPageLoadTimeout(TimeSpan.FromSeconds(20));
+
+            try
+            {
+                string releaseEnvironmentAppBaseURL = Environment.GetEnvironmentVariable("WebAppName");
+                if (releaseEnvironmentAppBaseURL != null)
+                {
+                    _webAppBaseURL = "http://" + releaseEnvironmentAppBaseURL + ".azurewebsites.net";
+                    Console.WriteLine("Web App Base URL: " + _webAppBaseURL);
+                }
+                else
+                {
+                    _webAppBaseURL = "http://gdaviwebappdev.azurewebsites.net";
+                    Console.WriteLine("Web App Base URL not set, using default");
+                }
+
+            }
+            catch (Exception Ex)
+            {
+                // Default web app URL
+                Console.WriteLine("Exception thrown accessing environment variable: " + Ex.Message);
+            }
         }
 
         [ClassCleanup()]
