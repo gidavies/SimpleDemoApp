@@ -11,8 +11,8 @@ namespace SimpleDemoApp.WebDriver
 
         private static RemoteWebDriver _webDriver = null;
         private static string _webAppBaseURL;
-        // A website I always keep running. Use to show working in VS, remove if prefer to show failure
-        private static string _defaultWebAppBaseURL = "http://gdaviwebappdev.azurewebsites.net";
+        // A website kept running and not changed. Use to show working in VS, remove if prefer to show failure
+        private static string _defaultWebAppBaseURL = "http://deployedsimplewebapp.azurewebsites.net/";
 
         [ClassInitialize()]
         // All tests in this class are going to use Chrome, therefore set the Chrome driver up once here
@@ -56,6 +56,18 @@ namespace SimpleDemoApp.WebDriver
             {
                 _webDriver.Quit();
             }
+        }
+
+        [TestMethod]
+        [TestCategory("UI")]
+        public void IndexTitleChromeTest()
+        {
+            string expectedTitle = "ASP.NET";
+            
+            _webDriver.Url = _webAppBaseURL + "/Home/Index";
+            RemoteWebElement titleElement = (RemoteWebElement)_webDriver.FindElementByTagName("H1");
+
+            Assert.AreEqual(expectedTitle, titleElement.Text);
         }
 
         [TestMethod]
