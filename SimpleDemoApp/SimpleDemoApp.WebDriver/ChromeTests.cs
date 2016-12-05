@@ -67,7 +67,7 @@ namespace SimpleDemoApp.WebDriver
             string actualPageTitle = _webDriver.Title;
             string expectedPageTitle = "Home Page - My ASP.NET Application";
 
-            Assert.AreEqual(actualPageTitle, expectedPageTitle);
+            Assert.AreEqual(expectedPageTitle, actualPageTitle);
         }
 
         [TestMethod]
@@ -79,7 +79,7 @@ namespace SimpleDemoApp.WebDriver
             string actualPageTitle = _webDriver.Title;
             string expectedPageTitle = "About - My ASP.NET Application";
 
-            Assert.AreEqual(actualPageTitle, expectedPageTitle);
+            Assert.AreEqual(expectedPageTitle, actualPageTitle);
         }
 
         [TestMethod]
@@ -91,7 +91,7 @@ namespace SimpleDemoApp.WebDriver
             string actualPageTitle = _webDriver.Title;
             string expectedPageTitle = "Contact - My ASP.NET Application";
 
-            Assert.AreEqual(actualPageTitle, expectedPageTitle);
+            Assert.AreEqual(expectedPageTitle, actualPageTitle);
         }
 
         [TestMethod]
@@ -103,7 +103,7 @@ namespace SimpleDemoApp.WebDriver
             _webDriver.Url = _webAppBaseURL + "/Home/Contact";
             RemoteWebElement supportEmailElement = (RemoteWebElement)_webDriver.FindElementByLinkText(supportEmailAddress);
 
-            Assert.AreEqual(supportEmailElement.Text, supportEmailAddress);
+            Assert.AreEqual(supportEmailAddress, supportEmailElement.Text);
         }
 
         [TestMethod]
@@ -115,7 +115,7 @@ namespace SimpleDemoApp.WebDriver
             _webDriver.Url = _webAppBaseURL + "/Home/Contact";
             RemoteWebElement marketingEmailElement = (RemoteWebElement)_webDriver.FindElementByLinkText(marketingEmailAddress);
 
-            Assert.AreEqual(marketingEmailElement.Text, marketingEmailAddress);
+            Assert.AreEqual(marketingEmailAddress, marketingEmailElement.Text);
         }
 
     }
