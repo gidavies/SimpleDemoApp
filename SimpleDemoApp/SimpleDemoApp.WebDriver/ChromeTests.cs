@@ -10,7 +10,9 @@ namespace SimpleDemoApp.WebDriver
     {
 
         private static RemoteWebDriver _webDriver = null;
-        private static string _webAppBaseURL = "http://gdaviwebappdev.azurewebsites.net";
+        private static string _webAppBaseURL;
+        // A website I always keep running. Use to show working in VS, remove if prefer to show failure
+        private static string _defaultWebAppBaseURL = "http://gdaviwebappdev.azurewebsites.net";
 
         [ClassInitialize()]
         // All tests in this class are going to use Chrome, therefore set the Chrome driver up once here
@@ -19,8 +21,32 @@ namespace SimpleDemoApp.WebDriver
             // Chrome specifics
             _webDriver = new ChromeDriver(@"C:\Tools");
 
-            //Set page load timeout to 5 seconds 
-            _webDriver.Manage().Timeouts().SetPageLoadTimeout(TimeSpan.FromSeconds(5));
+            //Set page load timeout to 20 seconds (occasionally 5 secs is too tight after a deployment)
+            _webDriver.Manage().Timeouts().SetPageLoadTimeout(TimeSpan.FromSeconds(20));
+
+            try
+            {
+                // Get the URL for the current environment (e.g. Dev, QA, Prod) as set in the release environment
+                string releaseEnvironmentAppBaseURL = Environment.GetEnvironmentVariable("WebAppName");
+                if (releaseEnvironmentAppBaseURL != null)
+                {
+                    _webAppBaseURL = "http://" + releaseEnvironmentAppBaseURL + ".azurewebsites.net";
+                    Console.WriteLine("WebApp Base URL found: " + _webAppBaseURL);
+                }
+                else
+                {
+                    // The environment variable exists but has no value, so use a default
+                    _webAppBaseURL = _defaultWebAppBaseURL;
+                    Console.WriteLine("WebApp Base URL not set, using default: " + _defaultWebAppBaseURL);
+                }
+            }
+            catch (Exception Ex)
+            {
+                // The environment variable probably doesn't exist (might be called from within VS)
+                Console.WriteLine("Exception thrown accessing environment variable: " + Ex.Message);
+                Console.WriteLine("Using default: " + _defaultWebAppBaseURL);
+                _webAppBaseURL = _defaultWebAppBaseURL;
+            }
         }
 
         [ClassCleanup()]
