@@ -11,6 +11,8 @@ namespace SimpleDemoApp.WebDriver
 
         private static RemoteWebDriver _webDriver = null;
         private static string _webAppBaseURL;
+        // A website kept running and not changed. Use to show working in VS, remove if prefer to show failure
+        private static string _defaultWebAppBaseURL = "http://deployedsimplewebapp.azurewebsites.net/";
 
         [ClassInitialize()]
         // All tests in this class are going to use Chrome, therefore set the Chrome driver up once here
@@ -19,28 +21,31 @@ namespace SimpleDemoApp.WebDriver
             // Chrome specifics
             _webDriver = new ChromeDriver(@"C:\Tools");
 
-            //Set page load timeout to 5 seconds 
+            //Set page load timeout to 20 seconds (occasionally 5 secs is too tight after a deployment)
             _webDriver.Manage().Timeouts().SetPageLoadTimeout(TimeSpan.FromSeconds(20));
 
             try
             {
+                // Get the URL for the current environment (e.g. Dev, QA, Prod) as set in the release environment
                 string releaseEnvironmentAppBaseURL = Environment.GetEnvironmentVariable("WebAppName");
                 if (releaseEnvironmentAppBaseURL != null)
                 {
                     _webAppBaseURL = "http://" + releaseEnvironmentAppBaseURL + ".azurewebsites.net";
-                    Console.WriteLine("Web App Base URL: " + _webAppBaseURL);
+                    Console.WriteLine("WebApp Base URL found: " + _webAppBaseURL);
                 }
                 else
                 {
-                    _webAppBaseURL = "http://gdaviwebappdev.azurewebsites.net";
-                    Console.WriteLine("Web App Base URL not set, using default");
+                    // The environment variable exists but has no value, so use a default
+                    _webAppBaseURL = _defaultWebAppBaseURL;
+                    Console.WriteLine("WebApp Base URL not set, using default: " + _defaultWebAppBaseURL);
                 }
-
             }
             catch (Exception Ex)
             {
-                // Default web app URL
+                // The environment variable probably doesn't exist (might be called from within VS)
                 Console.WriteLine("Exception thrown accessing environment variable: " + Ex.Message);
+                Console.WriteLine("Using default: " + _defaultWebAppBaseURL);
+                _webAppBaseURL = _defaultWebAppBaseURL;
             }
         }
 
@@ -55,6 +60,18 @@ namespace SimpleDemoApp.WebDriver
 
         [TestMethod]
         [TestCategory("UI")]
+        public void IndexTitleChromeTest()
+        {
+            string expectedTitle = "ASP.NET";
+            
+            _webDriver.Url = _webAppBaseURL + "/Home/Index";
+            RemoteWebElement titleElement = (RemoteWebElement)_webDriver.FindElementByTagName("H1");
+
+            Assert.AreEqual(expectedTitle, titleElement.Text);
+        }
+
+        [TestMethod]
+        [TestCategory("UI")]
         public void HomePageFoundChromeTest()
         {
             _webDriver.Url = _webAppBaseURL;
@@ -62,7 +79,7 @@ namespace SimpleDemoApp.WebDriver
             string actualPageTitle = _webDriver.Title;
             string expectedPageTitle = "Home Page - My ASP.NET Application";
 
-            Assert.AreEqual(actualPageTitle, expectedPageTitle);
+            Assert.AreEqual(expectedPageTitle, actualPageTitle);
         }
 
         [TestMethod]
@@ -74,7 +91,7 @@ namespace SimpleDemoApp.WebDriver
             string actualPageTitle = _webDriver.Title;
             string expectedPageTitle = "About - My ASP.NET Application";
 
-            Assert.AreEqual(actualPageTitle, expectedPageTitle);
+            Assert.AreEqual(expectedPageTitle, actualPageTitle);
         }
 
         [TestMethod]
@@ -86,7 +103,7 @@ namespace SimpleDemoApp.WebDriver
             string actualPageTitle = _webDriver.Title;
             string expectedPageTitle = "Contact - My ASP.NET Application";
 
-            Assert.AreEqual(actualPageTitle, expectedPageTitle);
+            Assert.AreEqual(expectedPageTitle, actualPageTitle);
         }
 
         [TestMethod]
@@ -98,7 +115,7 @@ namespace SimpleDemoApp.WebDriver
             _webDriver.Url = _webAppBaseURL + "/Home/Contact";
             RemoteWebElement supportEmailElement = (RemoteWebElement)_webDriver.FindElementByLinkText(supportEmailAddress);
 
-            Assert.AreEqual(supportEmailElement.Text, supportEmailAddress);
+            Assert.AreEqual(supportEmailAddress, supportEmailElement.Text);
         }
 
         [TestMethod]
@@ -110,7 +127,7 @@ namespace SimpleDemoApp.WebDriver
             _webDriver.Url = _webAppBaseURL + "/Home/Contact";
             RemoteWebElement marketingEmailElement = (RemoteWebElement)_webDriver.FindElementByLinkText(marketingEmailAddress);
 
-            Assert.AreEqual(marketingEmailElement.Text, marketingEmailAddress);
+            Assert.AreEqual(marketingEmailAddress, marketingEmailElement.Text);
         }
 
     }
